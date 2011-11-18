@@ -11,7 +11,7 @@
 (setq mac-option-modifier 'meta
       scroll-conservatively 101)
 
-(global-set-key (kbd "A-o") 'ido-find-file)
+(global-set-key (kbd "s-o") 'ido-find-file)
 (global-set-key (kbd "s-R") 'eval-last-sexp)
 (global-set-key [s-right] 'move-end-of-line)
 (global-set-key [s-left] 'move-beginning-of-line)
