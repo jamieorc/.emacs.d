@@ -15,6 +15,8 @@
 (setq mac-option-modifier 'meta
       scroll-conservatively 101)
 
+(setq exec-path (append exec-path '("/usr/local/bin")) )
+
 (global-set-key (kbd "s-o") 'ido-find-file)
 (global-set-key (kbd "s-R") 'eval-last-sexp)
 (global-set-key [s-right] 'move-end-of-line)
@@ -27,8 +29,7 @@
 (global-set-key (kbd "s-3") 'split-window-right)
 (global-set-key (kbd "s->") 'other-window)
 (global-set-key (kbd "s-}") 'next-buffer)
-(global-set-key (kbd "s-{") 'prv-buffer)
-
+(global-set-key (kbd "s-{") 'previous-buffer)
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
