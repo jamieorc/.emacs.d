@@ -18,6 +18,7 @@
 (setq exec-path (append exec-path '("/usr/local/bin")) )
 
 (global-set-key (kbd "s-o") 'ido-find-file)
+(global-set-key (kbd "s-b") 'ido-switch-buffer)
 (global-set-key (kbd "s-R") 'eval-last-sexp)
 (global-set-key [s-right] 'move-end-of-line)
 (global-set-key [s-left] 'move-beginning-of-line)
@@ -31,13 +32,15 @@
 (global-set-key (kbd "s-}") 'next-buffer)
 (global-set-key (kbd "s-{") 'previous-buffer)
 
+(global-set-key (kbd "C-Z") 'magit-status)
+
 (add-hook 'clojure-mode-hook
           '(lambda ()
              (define-key clojure-mode-map (kbd "s-r") 'slime-eval-defun)))
 
 ;; Auto-Complete
-(add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
 (require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
 (ac-config-default)
 
 ;; AC-Slime (auto-complete for slime)
