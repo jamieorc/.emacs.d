@@ -34,7 +34,9 @@
 (add-hook 'clojure-mode-hook
           '(lambda ()
              (define-key clojure-mode-map (kbd "s-r") 'slime-eval-defun)))
-
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
+(require 'auto-complete-config)
+(ac-config-default)
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
