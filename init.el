@@ -27,7 +27,11 @@
 (global-set-key (kbd "s-3") 'split-window-right)
 (global-set-key (kbd "s->") 'other-window)
 (global-set-key (kbd "s-}") 'next-buffer)
-(global-set-key (kbd "s-{") 'prv-buffer)
+(global-set-key (kbd "s-{") 'previous-buffer)
+
+(add-hook 'clojure-mode-hook
+          '(lambda ()
+             (define-key clojure-mode-map (kbd "s-r") 'slime-eval-defun)))
 
 
 (custom-set-faces
