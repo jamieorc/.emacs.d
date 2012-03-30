@@ -15,6 +15,8 @@
 (setq mac-option-modifier 'meta
       scroll-conservatively 101)
 
+(setq exec-path (append exec-path '("/usr/local/bin")) )
+
 (global-set-key (kbd "s-o") 'ido-find-file)
 (global-set-key (kbd "s-R") 'eval-last-sexp)
 (global-set-key [s-right] 'move-end-of-line)
