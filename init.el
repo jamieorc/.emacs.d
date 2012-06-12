@@ -9,13 +9,21 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(global-linum-mode t))
+ '(global-linum-mode t)
+ '(slime-net-coding-system (quote utf-8-unix))
+ '(global-auto-revert-mode t))
 
 (setq linum-format "%5d ")
 (setq mac-option-modifier 'meta
-      scroll-conservatively 101)
+      scroll-conservatively 1001)
 
 (setq exec-path (append exec-path '("/usr/local/bin")) )
+
+(setq locale-coding-system 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
 
 (global-set-key (kbd "s-o") 'ido-find-file)
 (global-set-key (kbd "s-b") 'ido-switch-buffer)
@@ -37,6 +45,10 @@
 (add-hook 'clojure-mode-hook
           '(lambda ()
              (define-key clojure-mode-map (kbd "s-r") 'slime-eval-defun)))
+(add-hook 'clojure-mode-hook 'textmate-mode)
+(add-hook 'midje-mode-hook
+          '(lambda ()
+             (define-key midje-mode-map (kbd "s-=") '(insert " => "))))
 
 ;; Auto-Complete
 (require 'auto-complete-config)
@@ -55,4 +67,6 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "White" :foreground "Black" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 140 :width normal :foundry "apple" :family "Monaco")))))
+ '(default ((t (:inherit nil :stipple nil :background "White" :foreground "Black" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 140 :width normal :foundry "apple" :family "Monaco"))))
+ '(isearch ((t (:background "yellow" :foreground "black")))))
+
