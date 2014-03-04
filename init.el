@@ -1,8 +1,12 @@
 (add-to-list 'load-path "/Users/jamieorc/.emacs.d/local/")
 
+;; (set-keyboard-coding-system nil)
+
 (require 'package)
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/") t)
+;; (add-to-list 'package-archives
+;;   '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize)
 
 (custom-set-variables
@@ -11,16 +15,24 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(global-linum-mode t)
+ '(package-archives (quote (("gnu" . "http://elpa.gnu.org/packages/") ("marmalade" . "http://marmalade-repo.org/packages/"))))
  '(slime-net-coding-system (quote utf-8-unix)))
-
 
 (global-auto-revert-mode 1)
 
 (setq linum-format "%5d ")
-(setq mac-option-modifier 'meta
+(setq mac-option-modifier nil
+      mac-option-modifier 'meta
       scroll-conservatively 1001)
 
 (setq exec-path (append exec-path '("/usr/local/bin")) )
+
+
+;; markdown
+(autoload 'markdown-mode "markdown-mode"
+   "Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode))
 
 ;; coffeescript
 (setq coffee-tab-width 2)
@@ -40,11 +52,19 @@
 (defun ido-disable-line-trucation () (set (make-local-variable 'truncate-lines) nil))
 (add-hook 'ido-minibuffer-setup-hook 'ido-disable-line-trucation)
 
+(eval-after-load 'ido
+  '(progn
+     (define-key ido-common-completion-map (kbd "C-n") 'ido-next-match)
+     (define-key ido-common-completion-map (kbd "C-p") 'ido-prev-match)))
+
+
 (setq locale-coding-system 'utf-8)
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
+
+(global-set-key (kbd "RET") 'newline-and-indent)
 
 (global-set-key (kbd "s-o") 'ido-find-file)
 (global-set-key (kbd "s-b") 'ido-switch-buffer)
@@ -63,27 +83,72 @@
 
 (global-set-key (kbd "C-Z") 'magit-status)
 
-(add-hook 'clojure-mode-hook
-          '(lambda ()
-             (define-key clojure-mode-map (kbd "s-r") 'slime-eval-defun)))
+;; for opening default browser
+(defun browse-default-macosx-browser (url &optional new-window)
+  ;; (interactive (browse-url-interactive-arg "URL: "))
+  (let ((url
+	 (if (aref (url-generic-parse-url url) 0)
+	     url
+	   (concat "http://" url))))
+    (start-process (concat "open " url) nil "open" url)))
+
+
+
+;; Rainbow delimiters
+(require 'rainbow-delimiters)
+;; (add-hook 'prog-mode-hook 'rainbow-delimiters-mode) ;; all progromming modes
+;; (global-rainbow-delimiters-mode) ;; global
+(add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
+
+;; Clojure
+(add-hook 'clojure-mode-hook 'paredit-mode)
 (add-hook 'clojure-mode-hook 'textmate-mode)
 (add-hook 'html-mode-hook 'textmate-mode)
 (add-hook 'ruby-mode-hook 'textmate-mode)
-(add-hook 'midje-mode-hook
-          '(lambda ()
-             (define-key midje-mode-map (kbd "s-=") '(insert " => "))))
+
+(setq auto-mode-alist (cons '("\\.edn$" . clojure-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.cljs$" . clojure-mode) auto-mode-alist))
+
+
+;; NRepl
+(add-hook 'nrepl-interaction-mode-hook
+  'nrepl-turn-on-eldoc-mode)
+(setq nrepl-popup-stacktraces nil)
 
 ;; Auto-Complete
 (require 'auto-complete-config)
 (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
 (ac-config-default)
 
-;; AC-Slime (auto-complete for slime)
-(require 'ac-slime)
-(add-hook 'slime-mode-hook 'set-up-slime-ac)
-(add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
+;; AC-Nrepl (auto-complete for nrepl)
+(require 'ac-nrepl)
+(add-hook 'nrepl-mode-hook 'ac-nrepl-setup)
+(add-hook 'nrepl-interaction-mode-hook 'ac-nrepl-setup)
 (eval-after-load "auto-complete"
-  '(add-to-list 'ac-modes 'slime-repl-mode))
+  '(add-to-list 'ac-modes 'nrepl-mode))
+;; (define-key nrepl-interaction-mode-map (kbd "C-c C-d") 'ac-nrepl-popup-doc)
+;; => "wrong type argument stringp, nil"
+
+;; AC-Slime (auto-complete for slime)
+;; (require 'ac-slime)
+;; (add-hook 'slime-mode-hook 'set-up-slime-ac)
+;; (add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
+;; (eval-after-load "auto-complete"
+;;   '(add-to-list 'ac-modes 'slime-repl-mode))
+
+;; Align-Cljlet
+(require 'align-cljlet)
+(add-hook 'clojure-mode-hook '(lambda ()
+                                (define-key clojure-mode-map 
+                                  (kbd "M-s-‘") 'align-cljlet)))
+(add-hook 'clojure-mode-hook '(lambda ()
+                                (define-key clojure-mode-map 
+                                  (kbd "M-s-]") 'align-cljlet)))
+
+
+;; Manually installed Midje-Mode as elpa version is slime-only
+(require 'midje-mode)
+(require 'clojure-jump-to-file)
 
 ;; Use node for js-comint
 (require 'js-comint)
@@ -101,8 +166,8 @@
                     (replace-regexp-in-string ".*1G.*3G" "> " output))))))
 
 ;; emacs-project-mode
-(require 'project-mode)
-(project-load-all)
+;; (require 'project-mode)
+;; (project-load-all)
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
